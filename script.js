@@ -9,9 +9,14 @@ let mode = null; // "1P" atau "2P"
 
 function startGame(selectedMode) {
   mode = selectedMode;
+  cells = Array(9).fill(null);
+  currentPlayer = "X";
+  gameOver = false;
+  
   document.getElementById("menu").style.display = "none";
   board.style.display = "grid";
   restartBtn.style.display = "inline-block";
+  statusText.textContent = `Giliran: ${currentPlayer}`;
   drawBoard();
 }
 
@@ -24,13 +29,12 @@ function drawBoard() {
     cellDiv.addEventListener("click", () => handleClick(index));
     board.appendChild(cellDiv);
   });
-  if (!gameOver) {
-    statusText.textContent = `Giliran: ${currentPlayer}`;
-  }
 }
 
 function handleClick(index) {
   if (cells[index] || gameOver) return;
+
+  if (mode === "1P" && currentPlayer === "O") return; // tunggu AI
 
   cells[index] = currentPlayer;
   drawBoard();
@@ -47,11 +51,13 @@ function handleClick(index) {
     return;
   }
 
+  // Ganti giliran
   if (mode === "2P") {
     currentPlayer = currentPlayer === "X" ? "O" : "X";
     statusText.textContent = `Giliran: ${currentPlayer}`;
   } else if (mode === "1P") {
     currentPlayer = "O";
+    statusText.textContent = `Giliran: Komputer (O)`;
     setTimeout(aiMove, 500);
   }
 }
@@ -74,12 +80,12 @@ function aiMove() {
   }
 
   currentPlayer = "X";
-  statusText.textContent = "Giliran: X";
+  statusText.textContent = `Giliran: ${currentPlayer}`;
 }
 
 function getBestMove() {
   let bestScore = -Infinity;
-  let move;
+  let move = -1;
   for (let i = 0; i < 9; i++) {
     if (!cells[i]) {
       cells[i] = "O";
@@ -139,5 +145,6 @@ function restartGame() {
   cells = Array(9).fill(null);
   currentPlayer = "X";
   gameOver = false;
+  statusText.textContent = `Giliran: ${currentPlayer}`;
   drawBoard();
 }
