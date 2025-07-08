@@ -1,10 +1,16 @@
+// Ambil elemen
 const board = document.getElementById("board");
 const statusText = document.getElementById("status");
 const restartBtn = document.getElementById("restartBtn");
 
 const menuDiv = document.getElementById("menu");
 const modeSelectDiv = document.getElementById("modeSelect");
+
 const btn1P = document.getElementById("btn1P");
+const btn2P = document.getElementById("btn2P");
+const btnNormal = document.getElementById("btnNormal");
+const btnEasy = document.getElementById("btnEasy");
+const btnBack = document.getElementById("btnBack");
 
 let cells = Array(9).fill(null);
 let currentPlayer = null;
@@ -13,16 +19,27 @@ let mode = null;
 let aiPlayer = null;
 let humanPlayer = null;
 
-// Tampilkan pilihan mode AI setelah klik 1 Player
+// Event listeners untuk menu
 btn1P.addEventListener("click", () => {
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "block";
 });
-
-function backToMenu() {
+btn2P.addEventListener("click", () => {
+  startGame("2P");
+});
+btnNormal.addEventListener("click", () => {
+  startGame("1P-normal");
+});
+btnEasy.addEventListener("click", () => {
+  startGame("1P-easy");
+});
+btnBack.addEventListener("click", () => {
   modeSelectDiv.style.display = "none";
   menuDiv.style.display = "block";
-}
+});
+restartBtn.addEventListener("click", () => {
+  restartGame();
+});
 
 function startGame(selectedMode) {
   mode = selectedMode;
@@ -32,11 +49,11 @@ function startGame(selectedMode) {
   restartBtn.style.display = "inline-block";
   statusText.textContent = "";
 
-  // Sembunyikan semua menu
+  // Sembunyikan menu dan mode select
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "none";
 
-  // Giliran pertama diacak
+  // Giliran pertama acak
   currentPlayer = Math.random() < 0.5 ? "X" : "O";
 
   if (mode.startsWith("1P")) {
@@ -48,10 +65,9 @@ function startGame(selectedMode) {
   }
 
   statusText.textContent = `Giliran: ${currentPlayer}`;
-
   drawBoard();
 
-  // Jika giliran AI langsung jalan
+  // Jika AI giliran pertama langsung jalan
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) {
     setTimeout(aiMove, 500);
   }
@@ -88,7 +104,6 @@ function handleClick(index) {
     return;
   }
 
-  // Ganti giliran
   currentPlayer = currentPlayer === "X" ? "O" : "X";
   statusText.textContent = `Giliran: ${currentPlayer}`;
 
@@ -182,9 +197,9 @@ function minimax(boardState, depth, isMaximizing) {
 
 function checkWin(player, boardState = cells) {
   const winPatterns = [
-    [0,1,2],[3,4,5],[6,7,8], // horizontal
-    [0,3,6],[1,4,7],[2,5,8], // vertical
-    [0,4,8],[2,4,6]          // diagonal
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
   ];
   return winPatterns.some(pattern =>
     pattern.every(i => boardState[i] === player)
