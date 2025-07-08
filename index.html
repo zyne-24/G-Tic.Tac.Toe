@@ -4,13 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TicTacToe | zyne-24</title>
+  <link rel="icon" type="image/gif" href="https://media1.tenor.com/m/q2B4LtxDqvoAAAAC/konata-lucky-star.gif" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <h1>Tic Tac Toe</h1>
-  <div class="board" id="board"></div>
+
+  <div id="menu">
+    <button onclick="startGame('1P')">1 Player</button>
+    <button onclick="startGame('2P')">2 Player</button>
+  </div>
+
+  <div class="board" id="board" style="display: none;"></div>
   <p id="status"></p>
-  <button onclick="restartGame()">Play</button>
+  <button id="restartBtn" style="display:none;" onclick="restartGame()">Main Lagi</button>
 
   <script src="script.js"></script>
 </body>
