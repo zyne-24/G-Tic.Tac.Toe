@@ -7,22 +7,24 @@
   <link rel="icon" type="image/gif" href="https://media1.tenor.com/m/q2B4LtxDqvoAAAAC/konata-lucky-star.gif" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
- <div id="menu">
+<h1>Tic Tac Toe</h1>
+
+  <div id="menu">
     <button id="btn1P">1 Player</button>
-    <button onclick="startGame('2P')">2 Player</button>
+    <button id="btn2P">2 Player</button>
   </div>
 
   <div id="modeSelect" style="display:none;">
     <p>Pilih Mode AI:</p>
-    <button onclick="startGame('1P-normal')">Normal</button>
-    <button onclick="startGame('1P-easy')">Mudah</button>
-    <button onclick="backToMenu()">Kembali</button>
+    <button id="btnNormal">Normal</button>
+    <button id="btnEasy">Mudah</button>
+    <br />
+    <button id="btnBack">Kembali</button>
   </div>
 
   <div id="board" style="display:none;"></div>
   <p id="status"></p>
-  <button id="restartBtn" style="display:none;" onclick="restartGame()">Main Lagi</button>
+  <button id="restartBtn" style="display:none;">Main Lagi</button>
 
   <script src="script.js"></script>
 </body>
