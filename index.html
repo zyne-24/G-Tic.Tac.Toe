@@ -8,14 +8,19 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Tic Tac Toe</h1>
-
-  <div id="menu">
-    <button onclick="startGame('1P')">1 Player</button>
+ <div id="menu">
+    <button id="btn1P">1 Player</button>
     <button onclick="startGame('2P')">2 Player</button>
   </div>
 
-  <div class="board" id="board" style="display: none;"></div>
+  <div id="modeSelect" style="display:none;">
+    <p>Pilih Mode AI:</p>
+    <button onclick="startGame('1P-normal')">Normal</button>
+    <button onclick="startGame('1P-easy')">Mudah</button>
+    <button onclick="backToMenu()">Kembali</button>
+  </div>
+
+  <div id="board" style="display:none;"></div>
   <p id="status"></p>
   <button id="restartBtn" style="display:none;" onclick="restartGame()">Main Lagi</button>
 
