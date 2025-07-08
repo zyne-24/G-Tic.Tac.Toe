@@ -1,4 +1,4 @@
-body {
+/*body {
   font-family: sans-serif;
   text-align: center;
   background-color: #f8f9fa;
@@ -45,6 +45,44 @@ h1 {
 }
 
 #status {
-  font-weight: bold;
+  font-weight: bold;*/
+
+
+ body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      justify-content: center;
+      margin: 20px auto;
+      max-width: 320px;
+    }
+    .cell {
+      border: 2px solid #333;
+      font-size: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      background: #eee;
+      transition: background 0.3s;
+    }
+    .cell:hover {
+      background: #ddd;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #restartBtn {
+      margin-top: 10px;
   margin: 10px 0;
 }
