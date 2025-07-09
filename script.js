@@ -1,4 +1,3 @@
-// Ambil elemen
 const board = document.getElementById("board");
 const statusText = document.getElementById("status");
 const restartBtn = document.getElementById("restartBtn");
@@ -12,14 +11,13 @@ const btnNormal = document.getElementById("btnNormal");
 const btnEasy = document.getElementById("btnEasy");
 const btnBack = document.getElementById("btnBack");
 
-let cells = Array(9).fill(null);
-let currentPlayer = null;
-let gameOver = false;
-let mode = null;
-let aiPlayer = null;
-let humanPlayer = null;
+let cells;
+let currentPlayer;
+let gameOver;
+let mode;
+let humanPlayer;
+let aiPlayer;
 
-// Event listeners menu
 btn1P.addEventListener("click", () => {
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "block";
@@ -52,27 +50,23 @@ function startGame(selectedMode) {
   gameOver = false;
   board.style.display = "grid";
   restartBtn.style.display = "inline-block";
-  statusText.textContent = "";
 
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "none";
 
-  // Tentukan giliran pertama acak
-  currentPlayer = Math.random() < 0.5 ? "X" : "O";
-
   if (mode.startsWith("1P")) {
-    humanPlayer = "X"; // Kita set selalu human "X"
-    aiPlayer = "O";    // AI selalu "O"
+    humanPlayer = "X";
+    aiPlayer = "O";
     currentPlayer = Math.random() < 0.5 ? humanPlayer : aiPlayer;
   } else {
     humanPlayer = null;
     aiPlayer = null;
+    currentPlayer = "X"; // default 2P mulai X
   }
 
   drawBoard();
   updateStatus();
 
-  // Kalau AI yang mulai dulu, langsung gerak
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) {
     setTimeout(aiMove, 500);
   }
@@ -80,48 +74,43 @@ function startGame(selectedMode) {
 
 function drawBoard() {
   board.innerHTML = "";
-  cells.forEach((cell, index) => {
+  cells.forEach((cell, idx) => {
     const cellDiv = document.createElement("div");
     cellDiv.classList.add("cell");
-    cellDiv.textContent = cell ? cell : "";
     if (cell === "X") cellDiv.classList.add("player-x");
     if (cell === "O") cellDiv.classList.add("player-o");
-
-    cellDiv.addEventListener("click", () => handleClick(index));
+    cellDiv.textContent = cell ? cell : "";
+    cellDiv.addEventListener("click", () => handleClick(idx));
     board.appendChild(cellDiv);
   });
 }
 
-function handleClick(index) {
-  if (cells[index] || gameOver) return;
-
-  // Kalau 1P dan giliran AI, jangan bisa klik
+function handleClick(idx) {
+  if (gameOver) return;
+  if (cells[idx]) return;
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) return;
 
-  // Isi cell dengan player sekarang
-  cells[index] = currentPlayer;
+  cells[idx] = currentPlayer;
   drawBoard();
 
   if (checkWin(currentPlayer)) {
-    statusText.textContent = (mode.startsWith("1P") && currentPlayer === aiPlayer) 
-      ? "Komputer menang!" 
+    statusText.textContent = mode.startsWith("1P") && currentPlayer === aiPlayer
+      ? "Komputer menang!"
       : `${currentPlayer} menang!`;
     gameOver = true;
     return;
   }
 
-  if (cells.every(cell => cell !== null)) {
+  if (cells.every(c => c !== null)) {
     statusText.textContent = "Seri!";
     gameOver = true;
     return;
   }
 
-  // Ganti giliran
   currentPlayer = currentPlayer === "X" ? "O" : "X";
   updateStatus();
 
-  // Kalau 1P dan giliran AI, jalankan AI move
-  if (mode.startsWith("1P") && currentPlayer === aiPlayer && !gameOver) {
+  if (mode.startsWith("1P") && currentPlayer === aiPlayer) {
     setTimeout(aiMove, 500);
   }
 }
@@ -159,7 +148,7 @@ function aiMove() {
     return;
   }
 
-  if (cells.every(cell => cell !== null)) {
+  if (cells.every(c => c !== null)) {
     statusText.textContent = "Seri!";
     gameOver = true;
     return;
@@ -170,16 +159,17 @@ function aiMove() {
 }
 
 function getRandomMove() {
-  const available = [];
-  cells.forEach((cell, i) => {
-    if (!cell) available.push(i);
+  const emptyIndices = [];
+  cells.forEach((c, i) => {
+    if (!c) emptyIndices.push(i);
   });
-  return available[Math.floor(Math.random() * available.length)];
+  return emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
 }
 
 function getBestMove() {
   let bestScore = -Infinity;
-  let move = -1;
+  let bestMove = -1;
+
   for (let i = 0; i < 9; i++) {
     if (!cells[i]) {
       cells[i] = aiPlayer;
@@ -187,52 +177,50 @@ function getBestMove() {
       cells[i] = null;
       if (score > bestScore) {
         bestScore = score;
-        move = i;
+        bestMove = i;
       }
     }
   }
-  return move;
+  return bestMove;
 }
 
 function minimax(boardState, depth, isMaximizing) {
   if (checkWin(aiPlayer, boardState)) return 10 - depth;
   if (checkWin(humanPlayer, boardState)) return depth - 10;
-  if (boardState.every(cell => cell !== null)) return 0;
+  if (boardState.every(c => c !== null)) return 0;
 
   if (isMaximizing) {
-    let best = -Infinity;
+    let maxEval = -Infinity;
     for (let i = 0; i < 9; i++) {
       if (!boardState[i]) {
         boardState[i] = aiPlayer;
-        let score = minimax(boardState, depth + 1, false);
+        let evalScore = minimax(boardState, depth + 1, false);
         boardState[i] = null;
-        best = Math.max(best, score);
+        maxEval = Math.max(maxEval, evalScore);
       }
     }
-    return best;
+    return maxEval;
   } else {
-    let best = Infinity;
+    let minEval = Infinity;
     for (let i = 0; i < 9; i++) {
       if (!boardState[i]) {
         boardState[i] = humanPlayer;
-        let score = minimax(boardState, depth + 1, true);
+        let evalScore = minimax(boardState, depth + 1, true);
         boardState[i] = null;
-        best = Math.min(best, score);
+        minEval = Math.min(minEval, evalScore);
       }
     }
-    return best;
+    return minEval;
   }
 }
 
 function checkWin(player, boardState = cells) {
-  const winPatterns = [
+  const wins = [
     [0,1,2],[3,4,5],[6,7,8],
     [0,3,6],[1,4,7],[2,5,8],
     [0,4,8],[2,4,6]
   ];
-  return winPatterns.some(pattern =>
-    pattern.every(i => boardState[i] === player)
-  );
+  return wins.some(pattern => pattern.every(i => boardState[i] === player));
 }
 
 function restartGame() {
@@ -242,6 +230,7 @@ function restartGame() {
   mode = null;
   humanPlayer = null;
   aiPlayer = null;
+
   board.style.display = "none";
   restartBtn.style.display = "none";
   statusText.textContent = "";
