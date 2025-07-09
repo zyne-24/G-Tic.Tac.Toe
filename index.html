@@ -5,27 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tic Tac Toe | zyne-24</title>
   <link rel="icon" type="image/gif" href="https://media1.tenor.com/m/q2B4LtxDqvoAAAAC/konata-lucky-star.gif" />
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
-<h1>Tic Tac Toe</h1>
 
-  <div id="menu">
+<body>
+  <div class="has-text-centered">
+    <h1 class="title is-3">Tic Tac Toe</h1>
 
-    <button class="button is-outlined" id="btn1P">1 Player</button>
-    <button class="button is-outlined" id="btn2P">2 Player</button>
+    <div id="menu">
+      <button class="button is-primary is-outlined m-2" id="btn1P">1 Player</button>
+      <button class="button is-primary is-outlined m-2" id="btn2P">2 Player</button>
+    </div>
+
+    <div id="modeSelect" style="display: none;">
+      <p class="mb-3">Pilih Mode AI:</p>
+      <button class="button is-primary is-outlined m-2" id="btnNormal">Normal</button>
+      <button class="button is-primary is-outlined m-2" id="btnEasy">Mudah</button>
+      <br>
+      <button class="button is-light mt-4" id="btnBack">Kembali</button>
+    </div>
+
+    <div id="board" style="display:none;"></div>
+
+    <p id="status" class="has-text-primary"></p>
+    <button class="button is-primary is-outlined" id="restartBtn" style="display:none;">Main Lagi</button>
   </div>
-
-  <div id="modeSelect" style="display:none;">
-    <p>Pilih Mode AI:</p>
-    <button class="button is-primary is-outlined" id="btnNormal">Normal</button>
-    <button class="button is-outlined" id="btnEasy">Mudah</button>
-    <br />
-    <button id="btnBack">Kembali</button>
-  </div>
-
-  <div id="board" style="display:none;"></div>
-  <p id="status"></p>
-  <button id="restartBtn" style="display:none;">Main Lagi</button>
 
   <script src="script.js"></script>
 </body>
