@@ -79,6 +79,11 @@ function drawBoard() {
     const cellDiv = document.createElement("div");
     cellDiv.classList.add("cell");
     cellDiv.textContent = cell ? cell : "";
+    if (cell === "X") {
+      cellDiv.classList.add("player-x");
+    } else if (cell === "O") {
+      cellDiv.classList.add("player-o");
+    }
     cellDiv.addEventListener("click", () => handleClick(index));
     board.appendChild(cellDiv);
   });
