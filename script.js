@@ -1,4 +1,3 @@
-// Ambil elemen
 const board = document.getElementById("board");
 const statusText = document.getElementById("status");
 const restartBtn = document.getElementById("restartBtn");
@@ -19,24 +18,28 @@ let mode = null;
 let aiPlayer = null;
 let humanPlayer = null;
 
-// Event listeners untuk menu
 btn1P.addEventListener("click", () => {
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "block";
 });
+
 btn2P.addEventListener("click", () => {
   startGame("2P");
 });
+
 btnNormal.addEventListener("click", () => {
   startGame("1P-normal");
 });
+
 btnEasy.addEventListener("click", () => {
   startGame("1P-easy");
 });
+
 btnBack.addEventListener("click", () => {
   modeSelectDiv.style.display = "none";
   menuDiv.style.display = "block";
 });
+
 restartBtn.addEventListener("click", () => {
   restartGame();
 });
@@ -49,26 +52,22 @@ function startGame(selectedMode) {
   restartBtn.style.display = "inline-block";
   statusText.textContent = "";
 
-  // Sembunyikan menu dan mode select
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "none";
 
-  // Giliran pertama acak
-  if (mode.startsWith("1P")) {
-  if (Math.random() < 0.5) {
-    humanPlayer = "X";
-    aiPlayer = "O";
-  } else {
-    humanPlayer = "O";
-    aiPlayer = "X";
-  }
   currentPlayer = Math.random() < 0.5 ? "X" : "O";
-}
+
+  if (mode.startsWith("1P")) {
+    aiPlayer = currentPlayer === "X" ? "O" : "X";
+    humanPlayer = currentPlayer;
+  } else {
+    aiPlayer = null;
+    humanPlayer = null;
+  }
 
   statusText.textContent = `Giliran: ${currentPlayer}`;
   drawBoard();
 
-  // Jika AI giliran pertama langsung jalan
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) {
     setTimeout(aiMove, 500);
   }
@@ -80,11 +79,8 @@ function drawBoard() {
     const cellDiv = document.createElement("div");
     cellDiv.classList.add("cell");
     cellDiv.textContent = cell ? cell : "";
-    if (cell === "X") {
-      cellDiv.classList.add("player-x");
-    } else if (cell === "O") {
-      cellDiv.classList.add("player-o");
-    }
+    if (cell === "X") cellDiv.classList.add("player-x");
+    else if (cell === "O") cellDiv.classList.add("player-o");
     cellDiv.addEventListener("click", () => handleClick(index));
     board.appendChild(cellDiv);
   });
@@ -92,14 +88,13 @@ function drawBoard() {
 
 function handleClick(index) {
   if (cells[index] || gameOver) return;
-
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) return;
 
   cells[index] = currentPlayer;
   drawBoard();
 
   if (checkWin(currentPlayer)) {
-    statusText.textContent = `${currentPlayer} menang!`;
+    statusText.textContent = `${currentPlayer ?? "?"} menang!`;
     gameOver = true;
     return;
   }
@@ -119,13 +114,9 @@ function handleClick(index) {
 }
 
 function aiMove() {
-  let move;
+  if (!mode.startsWith("1P") || gameOver) return;
 
-  if (mode === "1P-easy") {
-    move = getRandomMove();
-  } else {
-    move = getBestMove();
-  }
+  let move = mode === "1P-easy" ? getRandomMove() : getBestMove();
 
   cells[move] = aiPlayer;
   drawBoard();
@@ -147,10 +138,7 @@ function aiMove() {
 }
 
 function getRandomMove() {
-  const available = [];
-  cells.forEach((c, i) => {
-    if (!c) available.push(i);
-  });
+  const available = cells.map((val, idx) => val === null ? idx : null).filter(v => v !== null);
   return available[Math.floor(Math.random() * available.length)];
 }
 
