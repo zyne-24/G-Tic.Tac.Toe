@@ -50,26 +50,40 @@ function startGame(selectedMode) {
   gameOver = false;
   board.style.display = "grid";
   restartBtn.style.display = "inline-block";
-  statusText.textContent = "";
 
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "none";
 
+  // Acak giliran pertama untuk semua mode
   currentPlayer = Math.random() < 0.5 ? "X" : "O";
 
   if (mode.startsWith("1P")) {
+    // Tentukan siapa human dan AI berdasar giliran acak
     humanPlayer = currentPlayer;
     aiPlayer = currentPlayer === "X" ? "O" : "X";
+
+    // Update status dengan tulisan khusus untuk 1P
+    updateStatus1P();
   } else {
     humanPlayer = null;
     aiPlayer = null;
+    statusText.textContent = `Giliran: ${currentPlayer}`;
   }
 
-  statusText.textContent = `Giliran: ${currentPlayer}`;
   drawBoard();
 
+  // Jika AI giliran pertama, jalankan AI
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) {
     setTimeout(aiMove, 500);
+  }
+}
+
+function updateStatus1P() {
+  if (gameOver) return;
+  if (currentPlayer === humanPlayer) {
+    statusText.textContent = "Giliran Anda";
+  } else if (currentPlayer === aiPlayer) {
+    statusText.textContent = "Giliran Komputer";
   }
 }
 
@@ -93,6 +107,7 @@ function drawBoard() {
 
 function handleClick(index) {
   if (cells[index] || gameOver) return;
+
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) return;
 
   cells[index] = currentPlayer;
@@ -111,7 +126,12 @@ function handleClick(index) {
   }
 
   currentPlayer = currentPlayer === "X" ? "O" : "X";
-  statusText.textContent = `Giliran: ${currentPlayer}`;
+
+  if (mode.startsWith("1P")) {
+    updateStatus1P();
+  } else {
+    statusText.textContent = `Giliran: ${currentPlayer}`;
+  }
 
   if (mode.startsWith("1P") && currentPlayer === aiPlayer && !gameOver) {
     setTimeout(aiMove, 500);
@@ -138,11 +158,13 @@ function aiMove() {
   }
 
   currentPlayer = humanPlayer;
-  statusText.textContent = `Giliran: ${currentPlayer}`;
+  updateStatus1P();
 }
 
 function getRandomMove() {
-  const available = cells.map((c, i) => (c === null ? i : null)).filter(i => i !== null);
+  const available = cells
+    .map((c, i) => (c === null ? i : null))
+    .filter(i => i !== null);
   return available[Math.floor(Math.random() * available.length)];
 }
 
