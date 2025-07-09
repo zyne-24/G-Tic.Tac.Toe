@@ -1,51 +1,63 @@
 @import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css";
 html, body {
-      height: 100%;
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-        background-color: #071952;
-        font-family: 'Poppins', sans-serif;
-      }
-      #menu, #modeSelect {
-        margin: 1rem 0;
-      }
-      #board {
-        display: grid;
-        grid-template-columns: repeat(3, 100px);
-        grid-template-rows: repeat(3, 100px);
-        gap: 5px;
-        margin-top: 1rem;
-      }
-      .cell {
-        background-color: #071952;
-        border: 2px solid #97FEED;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        cursor: pointer;
-      }
-      #status {
-        margin-top: 1rem;
-        font-weight: bold;
-      }
-      #restartBtn {
-        margin-top: 1rem;
-        .player-x {
-          color: #ff3860; /* merah muda Bulma */
-          font-weight: bold;
-          font-size: 2.5rem;
-        }
-        
-        .player-o {
-          color: #3273dc; /* biru Bulma */
-          font-weight: bold;
-          font-size: 2.5rem;
-        }
-      }
-    }
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #071952;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+#menu, #modeSelect {
+  margin: 1rem 0;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 5px;
+  margin-top: 1rem;
+}
+
+.cell {
+  background-color: #071952;
+  border: 2px solid #97FEED;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cell:hover {
+  background-color: #0b2c78;
+}
+
+.player-x {
+  color: #ff3860; /* merah muda Bulma */
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+.player-o {
+  color: #3273dc; /* biru Bulma */
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+#status {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #97FEED;
+}
+
+#restartBtn {
+  margin-top: 1rem;
+}
+
     
