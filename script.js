@@ -95,14 +95,14 @@ function handleClick(idx) {
 
   if (checkWin(currentPlayer)) {
     statusText.textContent = mode.startsWith("1P") && currentPlayer === aiPlayer
-      ? "Komputer menang!"
-      : `${currentPlayer} menang!`;
+      ? "AI win!"
+      : `${currentPlayer} win!`;
     gameOver = true;
     return;
   }
 
   if (cells.every(c => c !== null)) {
-    statusText.textContent = "Seri!";
+    statusText.textContent = "Draw!";
     gameOver = true;
     return;
   }
@@ -119,12 +119,12 @@ function updateStatus() {
   if (gameOver) return;
 
   if (mode === "2P") {
-    statusText.textContent = `Giliran: ${currentPlayer}`;
+    statusText.textContent = `${currentPlayer} Turn`;
   } else if (mode.startsWith("1P")) {
     if (currentPlayer === humanPlayer) {
-      statusText.textContent = "Giliran Anda";
+      statusText.textContent = "Your Turn";
     } else {
-      statusText.textContent = "Giliran Komputer";
+      statusText.textContent = "AI Turn";
     }
   }
 }
@@ -143,13 +143,13 @@ function aiMove() {
   drawBoard();
 
   if (checkWin(aiPlayer)) {
-    statusText.textContent = "Komputer menang!";
+    statusText.textContent = "AI win!";
     gameOver = true;
     return;
   }
 
   if (cells.every(c => c !== null)) {
-    statusText.textContent = "Seri!";
+    statusText.textContent = "Draw!";
     gameOver = true;
     return;
   }
