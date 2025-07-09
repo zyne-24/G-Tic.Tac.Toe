@@ -54,15 +54,16 @@ function startGame(selectedMode) {
   modeSelectDiv.style.display = "none";
 
   // Giliran pertama acak
-  currentPlayer = Math.random() < 0.5 ? "X" : "O";
-
   if (mode.startsWith("1P")) {
-  aiPlayer = currentPlayer === "X" ? "O" : "X";
-  humanPlayer = aiPlayer === "X" ? "O" : "X";
+  if (Math.random() < 0.5) {
+    humanPlayer = "X";
+    aiPlayer = "O";
   } else {
-    humanPlayer = null;
-    aiPlayer = null;
+    humanPlayer = "O";
+    aiPlayer = "X";
   }
+  currentPlayer = Math.random() < 0.5 ? "X" : "O";
+}
 
   statusText.textContent = `Giliran: ${currentPlayer}`;
   drawBoard();
