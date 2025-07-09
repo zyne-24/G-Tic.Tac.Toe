@@ -1,3 +1,4 @@
+// Ambil elemen
 const board = document.getElementById("board");
 const statusText = document.getElementById("status");
 const restartBtn = document.getElementById("restartBtn");
@@ -18,6 +19,7 @@ let mode = null;
 let aiPlayer = null;
 let humanPlayer = null;
 
+// Event listeners menu
 btn1P.addEventListener("click", () => {
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "block";
@@ -50,40 +52,29 @@ function startGame(selectedMode) {
   gameOver = false;
   board.style.display = "grid";
   restartBtn.style.display = "inline-block";
+  statusText.textContent = "";
 
   menuDiv.style.display = "none";
   modeSelectDiv.style.display = "none";
 
-  // Acak giliran pertama untuk semua mode
+  // Tentukan giliran pertama acak
   currentPlayer = Math.random() < 0.5 ? "X" : "O";
 
   if (mode.startsWith("1P")) {
-    // Tentukan siapa human dan AI berdasar giliran acak
-    humanPlayer = currentPlayer;
-    aiPlayer = currentPlayer === "X" ? "O" : "X";
-
-    // Update status dengan tulisan khusus untuk 1P
-    updateStatus1P();
+    humanPlayer = "X"; // Kita set selalu human "X"
+    aiPlayer = "O";    // AI selalu "O"
+    currentPlayer = Math.random() < 0.5 ? humanPlayer : aiPlayer;
   } else {
     humanPlayer = null;
     aiPlayer = null;
-    statusText.textContent = `Giliran: ${currentPlayer}`;
   }
 
   drawBoard();
+  updateStatus();
 
-  // Jika AI giliran pertama, jalankan AI
+  // Kalau AI yang mulai dulu, langsung gerak
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) {
     setTimeout(aiMove, 500);
-  }
-}
-
-function updateStatus1P() {
-  if (gameOver) return;
-  if (currentPlayer === humanPlayer) {
-    statusText.textContent = "Giliran Anda";
-  } else if (currentPlayer === aiPlayer) {
-    statusText.textContent = "Giliran Komputer";
   }
 }
 
@@ -93,12 +84,8 @@ function drawBoard() {
     const cellDiv = document.createElement("div");
     cellDiv.classList.add("cell");
     cellDiv.textContent = cell ? cell : "";
-
-    if (cell === "X") {
-      cellDiv.classList.add("player-x");
-    } else if (cell === "O") {
-      cellDiv.classList.add("player-o");
-    }
+    if (cell === "X") cellDiv.classList.add("player-x");
+    if (cell === "O") cellDiv.classList.add("player-o");
 
     cellDiv.addEventListener("click", () => handleClick(index));
     board.appendChild(cellDiv);
@@ -108,13 +95,17 @@ function drawBoard() {
 function handleClick(index) {
   if (cells[index] || gameOver) return;
 
+  // Kalau 1P dan giliran AI, jangan bisa klik
   if (mode.startsWith("1P") && currentPlayer === aiPlayer) return;
 
+  // Isi cell dengan player sekarang
   cells[index] = currentPlayer;
   drawBoard();
 
-  if (currentPlayer && checkWin(currentPlayer)) {
-    statusText.textContent = `${currentPlayer} menang!`;
+  if (checkWin(currentPlayer)) {
+    statusText.textContent = (mode.startsWith("1P") && currentPlayer === aiPlayer) 
+      ? "Komputer menang!" 
+      : `${currentPlayer} menang!`;
     gameOver = true;
     return;
   }
@@ -125,23 +116,40 @@ function handleClick(index) {
     return;
   }
 
+  // Ganti giliran
   currentPlayer = currentPlayer === "X" ? "O" : "X";
+  updateStatus();
 
-  if (mode.startsWith("1P")) {
-    updateStatus1P();
-  } else {
-    statusText.textContent = `Giliran: ${currentPlayer}`;
-  }
-
+  // Kalau 1P dan giliran AI, jalankan AI move
   if (mode.startsWith("1P") && currentPlayer === aiPlayer && !gameOver) {
     setTimeout(aiMove, 500);
   }
 }
 
-function aiMove() {
-  if (!mode.startsWith("1P") || gameOver) return;
+function updateStatus() {
+  if (gameOver) return;
 
-  const move = mode === "1P-easy" ? getRandomMove() : getBestMove();
+  if (mode === "2P") {
+    statusText.textContent = `Giliran: ${currentPlayer}`;
+  } else if (mode.startsWith("1P")) {
+    if (currentPlayer === humanPlayer) {
+      statusText.textContent = "Giliran Anda";
+    } else {
+      statusText.textContent = "Giliran Komputer";
+    }
+  }
+}
+
+function aiMove() {
+  if (gameOver) return;
+
+  let move;
+  if (mode === "1P-easy") {
+    move = getRandomMove();
+  } else {
+    move = getBestMove();
+  }
+
   cells[move] = aiPlayer;
   drawBoard();
 
@@ -158,13 +166,14 @@ function aiMove() {
   }
 
   currentPlayer = humanPlayer;
-  updateStatus1P();
+  updateStatus();
 }
 
 function getRandomMove() {
-  const available = cells
-    .map((c, i) => (c === null ? i : null))
-    .filter(i => i !== null);
+  const available = [];
+  cells.forEach((cell, i) => {
+    if (!cell) available.push(i);
+  });
   return available[Math.floor(Math.random() * available.length)];
 }
 
@@ -216,7 +225,6 @@ function minimax(boardState, depth, isMaximizing) {
 }
 
 function checkWin(player, boardState = cells) {
-  if (!player) return false;
   const winPatterns = [
     [0,1,2],[3,4,5],[6,7,8],
     [0,3,6],[1,4,7],[2,5,8],
