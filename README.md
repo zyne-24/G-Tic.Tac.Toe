@@ -6,6 +6,8 @@ This is Tic Tac Toe web-based game with 2 modes :
 
 ## How to Play - ❔
 
+Visit this site [Tic Tac Toe | zyne](https://zyne-24.github.io/G-Tic.Tac.Toe/)
+
 1. **Choose a game mode:**
    - Click **Single-Player** to play against the AI.
    - Click **2-Player** to play with a friend on the same device.
