@@ -58,11 +58,11 @@ function startGame(selectedMode) {
   currentPlayer = Math.random() < 0.5 ? "X" : "O";
 
   if (mode.startsWith("1P")) {
-    aiPlayer = currentPlayer === "X" ? "O" : "X";
     humanPlayer = currentPlayer;
+    aiPlayer = currentPlayer === "X" ? "O" : "X";
   } else {
-    aiPlayer = null;
     humanPlayer = null;
+    aiPlayer = null;
   }
 
   statusText.textContent = `Giliran: ${currentPlayer}`;
@@ -79,8 +79,13 @@ function drawBoard() {
     const cellDiv = document.createElement("div");
     cellDiv.classList.add("cell");
     cellDiv.textContent = cell ? cell : "";
-    if (cell === "X") cellDiv.classList.add("player-x");
-    else if (cell === "O") cellDiv.classList.add("player-o");
+
+    if (cell === "X") {
+      cellDiv.classList.add("player-x");
+    } else if (cell === "O") {
+      cellDiv.classList.add("player-o");
+    }
+
     cellDiv.addEventListener("click", () => handleClick(index));
     board.appendChild(cellDiv);
   });
@@ -93,8 +98,8 @@ function handleClick(index) {
   cells[index] = currentPlayer;
   drawBoard();
 
-  if (checkWin(currentPlayer)) {
-    statusText.textContent = `${currentPlayer ?? "?"} menang!`;
+  if (currentPlayer && checkWin(currentPlayer)) {
+    statusText.textContent = `${currentPlayer} menang!`;
     gameOver = true;
     return;
   }
@@ -116,8 +121,7 @@ function handleClick(index) {
 function aiMove() {
   if (!mode.startsWith("1P") || gameOver) return;
 
-  let move = mode === "1P-easy" ? getRandomMove() : getBestMove();
-
+  const move = mode === "1P-easy" ? getRandomMove() : getBestMove();
   cells[move] = aiPlayer;
   drawBoard();
 
@@ -138,7 +142,7 @@ function aiMove() {
 }
 
 function getRandomMove() {
-  const available = cells.map((val, idx) => val === null ? idx : null).filter(v => v !== null);
+  const available = cells.map((c, i) => (c === null ? i : null)).filter(i => i !== null);
   return available[Math.floor(Math.random() * available.length)];
 }
 
@@ -190,6 +194,7 @@ function minimax(boardState, depth, isMaximizing) {
 }
 
 function checkWin(player, boardState = cells) {
+  if (!player) return false;
   const winPatterns = [
     [0,1,2],[3,4,5],[6,7,8],
     [0,3,6],[1,4,7],[2,5,8],
