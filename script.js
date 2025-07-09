@@ -57,8 +57,8 @@ function startGame(selectedMode) {
   currentPlayer = Math.random() < 0.5 ? "X" : "O";
 
   if (mode.startsWith("1P")) {
-    humanPlayer = currentPlayer;
-    aiPlayer = currentPlayer === "X" ? "O" : "X";
+  aiPlayer = currentPlayer === "X" ? "O" : "X";
+  humanPlayer = aiPlayer === "X" ? "O" : "X";
   } else {
     humanPlayer = null;
     aiPlayer = null;
